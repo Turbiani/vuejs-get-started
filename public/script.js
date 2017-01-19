@@ -15,9 +15,10 @@ new Vue({
             this.total += item.price;
             var found = false;
             for(var i = 0; i < this.cart.length; i ++){
-                if(this.cart[i].id == item.id){
+                if(this.cart[i].id === item.id){
                     this.cart[i].qty++;
                     found = true;
+                    break;
                 }
             }
 
@@ -35,11 +36,15 @@ new Vue({
             this.total += item.price;
         },
         dec: function (item) {
-            if(item.qty > 0) {
-                item.qty--;
-                this.total -= item.price;
-            } else {
-                item.qty = 0;
+            item.qty--;
+            this.total -= item.price;
+            if (item.qty <= 0){
+                for (var i = 0; i < this.cart.length; i++){
+                    if (this.cart[i].id === item.id){
+                        this.cart.splice(i, 1);
+                        break;
+                    }
+                }
             }
         }
     },
