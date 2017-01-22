@@ -1,17 +1,17 @@
 function binarySearch(array, key) {
-    var lo = 0,
-        hi = array.length - 1,
-        mid,
-        element;
-    while (lo <= hi) {
-        mid = ((lo + hi) >> 1);
-        element = array[mid].id;
-        if (element < key) {
-            lo = mid + 1;
-        } else if (element > key) {
-            hi = mid - 1;
+    let inicio = 0,
+        fim = array.length - 1,
+        meio,
+        elemento;
+    while (inicio <= fim) {
+        meio = ((inicio + fim) >> 1);
+        elemento = array[meio].id;
+        if (elemento < key) {
+            inicio = meio + 1;
+        } else if (elemento > key) {
+            fim = meio - 1;
         } else {
-            return mid;
+            return meio;
         }
     }
     return -1;
@@ -21,20 +21,19 @@ new Vue({
     el : '#app',
     data: {
         total: 0,
-        items: [
-            { id:1, title: 'Item 1', price: 33.98},
-            { id:2, title: 'Item 2', price: 10.08},
-            { id:3, title: 'Item 3', price: 110.90},
-            { id:4, title: 'Item 4', price: 10.90},
-            { id:5, title: 'Item 5', price: 11.91},
-            { id:6, title: 'Item 6', price: 7.03},
-            { id:7, title: 'Item 7', price: 3.80},
-            { id:8, title: 'Item 8', price: 4.25},
-            { id:9, title: 'Item 9', price: 1100.07},
-        ],
-        cart: []
+        items: [],
+        cart: [],
+        newSearch: '',
+        lastSearch: ''
     },
     methods: {
+        onSubmit: function () {
+            this.items = [];
+            this.$http.get('/search/'.concat(this.newSearch)).then(function (response) {
+                this.lastSearch = this.newSearch;
+                this.items = response.data;
+            });
+        },
         addItem: function(index){
             var item = this.items[index];
             this.total += item.price;

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
     <title>Vue.js Poster Shop</title>
@@ -17,12 +17,26 @@
 <div id="app">
     <div class="header">
         <h1>Vue.js Poster Store</h1>
+        <form class="searchbar" v-on:submit.prevent="onSubmit">
+            <input type="text" placeholder="Search for posters" v-model="newSearch">
+            <input type="submit" value="Search" class="btn">
+        </form>
     </div>
     <div class="main">
         <div class="products">
+            <div class="search-results">
+                Found {{ items.length }} results for search item {{ lastSearch }}
+            </div>
             <div class="product" v-for="(item, index) in items ">
-                <h4 class="product-title">{{item.title}}</h4>
-                <button v-on:click="addItem(index)" class="add-to-cart btn">Add to Cart</button>
+                <div>
+                    <div class="product-image">
+                        <img v-bind:src="item.link">
+                    </div>
+                </div>
+                <div>
+                    <h4 class="product-title">{{item.title}}</h4>
+                    <button v-on:click="addItem(index)" class="add-to-cart btn">Add to Cart</button>
+                </div>
             </div>
         </div>
         <div class="cart">
@@ -48,6 +62,7 @@
 <!-- Scripts -->
 <script src="/reload/reload.js"></script>
 <script src="node_modules/vue/dist/vue.js"></script>
+<script src="node_modules/vue-resource/dist/vue-resource.js"></script>
 <script type="text/javascript" src="public/script.js"></script>
 
 </body>
