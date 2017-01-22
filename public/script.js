@@ -1,3 +1,5 @@
+const LOAD_NUM = 10;
+
 function binarySearch(array, key) {
     let inicio = 0,
         fim = array.length - 1,
@@ -22,19 +24,32 @@ new Vue({
     data: {
         total: 0,
         items: [],
+        results: [],
         cart: [],
         newSearch: 'anime',
         lastSearch: '',
         loading: false,
         price: 9.99
     },
+    computed:{
+        noMoreItems: function () {
+            return this.items.length === this.results.length && this.results.length > 0;
+        }
+    },
     methods: {
+        appendItems: function () {
+            if(this.items.length < this.results.length){
+                let append = this.results.slice(this.items.length, this.items.length + LOAD_NUM);
+                this.items = this.items.concat(append);
+            }
+        },
         onSubmit: function () {
             this.items = [];
             this.loading = true;
             this.$http.get('/search/'.concat(this.newSearch)).then(function (response) {
                 this.lastSearch = this.newSearch;
-                this.items = response.data;
+                this.results = response.data;
+                this.appendItems();
                 this.loading = false;
             });
         },
@@ -76,5 +91,12 @@ new Vue({
     },
     mounted: function () {
         this.onSubmit();
+
+        var vueInstance = this;
+        var elem = document.getElementById("product-list-bottom");
+        var watcher = scrollMonitor.create(elem);
+        watcher.enterViewport(function () {
+            vueInstance.appendItems();
+        });
     }
-})
+});
