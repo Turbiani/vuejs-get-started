@@ -44,14 +44,16 @@ new Vue({
             }
         },
         onSubmit: function () {
-            this.items = [];
-            this.loading = true;
-            this.$http.get('/search/'.concat(this.newSearch)).then(function (response) {
-                this.lastSearch = this.newSearch;
-                this.results = response.data;
-                this.appendItems();
-                this.loading = false;
-            });
+            if(this.newSearch.length){
+                this.items = [];
+                this.loading = true;
+                this.$http.get('/search/'.concat(this.newSearch)).then(function (response) {
+                    this.lastSearch = this.newSearch;
+                    this.results = response.data;
+                    this.appendItems();
+                    this.loading = false;
+                });
+            }
         },
         addItem: function(index){
             var item = this.items[index];
